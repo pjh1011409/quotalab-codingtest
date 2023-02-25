@@ -3,8 +3,12 @@ import styled from '@emotion/styled';
 import { faBuilding } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Select } from 'antd';
+import useGetCompany from 'src/hooks/useGetCompany';
 
 export const CompanySelect = () => {
+  const { company, isLoading } = useGetCompany();
+
+  if (isLoading) return <></>;
   return (
     <>
       <BuildingLogo>
@@ -12,8 +16,8 @@ export const CompanySelect = () => {
       </BuildingLogo>
       <Select
         style={{ margin: '0px 5px', width: '140px', textAlign: 'center' }}
-        defaultValue={'주식회사 벨코즈'}
-        options={[{ value: `1`, label: '주식회사 벨코즈' }]}
+        defaultValue={`${company?.data.name}`}
+        options={[{ value: `1`, label: `${company?.data.name}` }]}
       />
     </>
   );
