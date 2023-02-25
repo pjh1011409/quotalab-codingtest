@@ -2,10 +2,11 @@ import React from 'react';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import useGetStakeholder, { Stakeholder, StockAmount } from 'src/hooks/useGetStakeholder';
+import { SkeletonListUI } from '../LoadUI/Skeleton';
 import useGetCompany from 'src/hooks/useGetCompany';
 
 const Table = () => {
-  const { shareholderlist } = useGetStakeholder();
+  const { shareholderlist, isLoading } = useGetStakeholder();
   const { company } = useGetCompany();
   const sumAmount: number[] = [];
 
@@ -17,6 +18,8 @@ const Table = () => {
   const commaMark = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
+
+  if (isLoading) return <SkeletonListUI />;
 
   return (
     <TableWrapper>
