@@ -1,5 +1,26 @@
 import React from 'react';
+import styled from '@emotion/styled';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export const Profile = () => {
-  return <div>Profile</div>;
+  return (
+    <UserWrapper>
+      <FontAwesomeIcon icon={faUserCircle} color="gray" size="lg" />
+      <UserName>홍길동</UserName>
+    </UserWrapper>
+  );
 };
+
+const UserWrapper = styled.div`
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const UserName = styled.div`
+  margin-left: 5px;
+  margin-right: 20px;
+  font-weight: 400;
+`;
