@@ -1,30 +1,64 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import dayjs from 'dayjs';
+import useGetStakeholder, { Stakeholder, StockAmount } from 'src/hooks/useGetStakeholder';
+import useGetCompany from 'src/hooks/useGetCompany';
 
 const Table = () => {
+  const { shareholderlist } = useGetStakeholder();
+  const { company } = useGetCompany();
+  const sumAmount: number[] = [];
+
+  const totalAmount = () => {
+    shareholderlist?.data.map((s: Stakeholder) => sumAmount.push(s.stockAmount));
+    return sumAmount.reduce((acc, curr) => acc + curr, 0);
+  };
+
+  const commaMark = (num: number): string => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
   return (
     <TableWrapper>
       <RootTable>
         <Theader>
-          <td className="h1">이름</td>
-          <td className="h2">주식 종류</td>
-          <td className="h3">보유 수량</td>
-          <td className="h4">주당 단가</td>
-          <td className="h5">취득일</td>
+          <tr>
+            <td className="h1">이름</td>
+            <td className="h2">주식 종류</td>
+            <td className="h3">보유 수량</td>
+            <td className="h4">주당 단가</td>
+            <td className="h5">취득일</td>
+          </tr>
         </Theader>
-        <TBody>
-          <td className="b1">1</td>
-          <td className="b2">1</td>
-          <td className="b3">1</td>
-          <td className="b4">1</td>
-          <td className="b5">1</td>
-        </TBody>
+        {shareholderlist?.data
+          .sort((a: StockAmount, b: StockAmount) => b.stockAmount - a.stockAmount)
+          .map((s: Stakeholder) => {
+            return (
+              <TBody key={s.name}>
+                <tr>
+                  <td className="b1">
+                    {s.name}
+                    {(s.stockAmount / company?.data.totalStockAmount) * 100 >= 2 || // 지분율 2% 이상
+                    s.stockAmount * s.stockPrice >= 1000000000 ? ( // 총가지 10억 이상
+                      <MajorStakeholder>👑 대주주</MajorStakeholder>
+                    ) : null}
+                  </td>
+                  <td className="b2">{s.stockType}</td>
+                  <td className="b3">{commaMark(s.stockAmount)}</td>
+                  <td className="b4">₩{commaMark(s.stockPrice)}</td>
+                  <td className="b5">{dayjs(s.grantedAt).format('YYYY-MM-DD')}</td>
+                </tr>
+              </TBody>
+            );
+          })}
         <TFooter>
-          <td colSpan={2} className="f1">
-            Total
-          </td>
-          <td className="f2">숫자</td>
-          <td colSpan={2} />
+          <tr>
+            <td colSpan={2} className="f1">
+              합계
+            </td>
+            <td className="f2"> {commaMark(totalAmount())}</td>
+            <td colSpan={2} />
+          </tr>
         </TFooter>
       </RootTable>
     </TableWrapper>
@@ -33,7 +67,7 @@ const Table = () => {
 
 export default Table;
 
-const TableWrapper = styled.div`
+export const TableWrapper = styled.div`
   width: full;
   min-height: 380px;
   height: auto;
@@ -41,8 +75,10 @@ const TableWrapper = styled.div`
   background-color: #ffffff;
   box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.03);
   padding: 24px;
+
   @media (max-width: 500px) {
     width: 90%;
+    margin: 0 auto;
     overflow-y: scroll;
   }
 `;
@@ -62,7 +98,8 @@ const Theader = styled.thead`
   font-size: 14px;
   line-height: 20px;
   color: #979797;
-  & > td {
+
+  & > tr > td {
     border: 1px solid #e6e6e6;
   }
   .h1 {
@@ -79,19 +116,39 @@ const Theader = styled.thead`
   .h3 {
     text-align: right;
     width: 15%;
+
     padding: 6px 12px 5px 0px;
   }
+
   .h4 {
     text-align: right;
     width: 15%;
+
     padding: 6px 12px 5px 0px;
   }
   .h5 {
     text-align: left;
     width: 15%;
+
     padding: 6px 0px 5px 12px;
     border-right: none;
   }
+`;
+
+const MajorStakeholder = styled.span`
+  margin: 0px 8px;
+  padding: 3px;
+  width: 40px;
+  height: 10px;
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 10px;
+  color: #333333;
+  background-color: #fff9db;
+  border: 1px solid #ffd43b;
+  border-radius: 3px;
 `;
 
 const TBody = styled.thead`
@@ -101,8 +158,9 @@ const TBody = styled.thead`
   font-size: 14px;
   line-height: 20px;
   text-align: left;
-  color: #979797;
-  & > td {
+  color: #333333;
+
+  & > tr > td {
     border: 1px solid #e6e6e6;
   }
   .b1 {
@@ -119,16 +177,20 @@ const TBody = styled.thead`
   .b3 {
     text-align: right;
     width: 15%;
+
     padding: 6px 12px 5px 0px;
   }
+
   .b4 {
     text-align: right;
     width: 15%;
+
     padding: 6px 12px 5px 0px;
   }
   .b5 {
     text-align: left;
     width: 15%;
+
     padding: 6px 0px 5px 12px;
     border-right: none;
   }
@@ -142,6 +204,7 @@ const TFooter = styled.thead`
   font-size: 14px;
   line-height: 20px;
   color: #333333;
+
   .f1 {
     text-align: left;
     padding: 6px 0px 5px 12px;
