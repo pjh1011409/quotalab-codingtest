@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import useInput from 'src/hooks/useInput';
 import useAddStakeholder from 'src/hooks/useAddStakeholder';
+import { useCustomToast } from 'src/hooks/useCustomToast';
 import { Select } from '@chakra-ui/react';
 
 const AddForm = () => {
@@ -10,6 +11,7 @@ const AddForm = () => {
   const [stockType, setStockType] = useState('');
   const [stockAmount, onChangeStockAmount] = useInput(0);
   const isActive = name && stockType && stockAmount;
+  const toast = useCustomToast();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setStockType(event.target.value);
@@ -19,6 +21,12 @@ const AddForm = () => {
     e.preventDefault();
     if (isActive) {
       onCreate({ name, stockType, stockAmount });
+    } else {
+      toast({
+        title: '모든 정보를 입력해주세요.',
+        status: 'warning',
+        isClosable: true,
+      });
     }
   };
 
