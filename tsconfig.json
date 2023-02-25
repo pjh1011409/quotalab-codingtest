@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "lib": ["ES2020","ES2022" ,"DOM"],
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "Node",
+    "target": "es5",
+    "strict": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    
+  },
+ 
+}
