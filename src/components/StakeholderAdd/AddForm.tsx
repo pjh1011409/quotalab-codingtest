@@ -1,41 +1,74 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
+import useInput from 'src/hooks/useInput';
+import useAddStakeholder from 'src/hooks/useAddStakeholder';
 import { Select } from '@chakra-ui/react';
 
 const AddForm = () => {
+  const { onCreate } = useAddStakeholder();
+  const [name, onChangeName] = useInput('');
+  const [stockType, setStockType] = useState('');
+  const [stockAmount, onChangeStockAmount] = useInput(0);
+  const isActive = name && stockType && stockAmount;
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setStockType(event.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isActive) {
+      onCreate({ name, stockType, stockAmount });
+    }
+  };
+
   return (
     <>
-      <AddFormBox>
-        <StakeholderName>
-          주주 이름 <span style={{ color: '#FF8787' }}>*</span>
-        </StakeholderName>
-        <StakeholderNameInput name="name" type="text" placeholder="이름 입력" />
-        <AlertText>기관 투자를 받은 경우엔 기관명, 펀드 투자를 받은 경우엔 펀드명을 입력해주세요.</AlertText>
-        <Column>
-          <div>
-            <StockType>
-              주식 종류 <span style={{ color: '#FF8787' }}>*</span>
-            </StockType>
-            <StockTypeInput>
-              <Select placeholder="주식 종류 선택" style={{ fontSize: '14px', color: '#333333' }} size="lg">
-                <option value="보통주식">보통주식</option>
-                <option value="상환전환우선주식 1종">상환전환우선주식 1종</option>
-                <option value="상환전환우선주식 2종">상환전환우선주식 2종</option>
-                <option value="상환전환우선주식 3종">상환전환우선주식 3종</option>
-              </Select>
-            </StockTypeInput>
-          </div>
-          <div>
-            <StockAmount>
-              주식 수량 <span style={{ color: '#FF8787' }}>*</span>
-            </StockAmount>
-            <StockAmountInput name="stockAmount" type="number" min={1} placeholder="수량 입력"></StockAmountInput>
-          </div>
-        </Column>
-      </AddFormBox>
-      <SubmitButtonWrapper>
-        <Button type="submit">추가하기</Button>
-      </SubmitButtonWrapper>
+      <form onSubmit={handleSubmit}>
+        <AddFormBox>
+          <StakeholderName>
+            주주 이름 <span style={{ color: '#FF8787' }}>*</span>
+          </StakeholderName>
+          <StakeholderNameInput name="name" type="text" placeholder="이름 입력" onChange={onChangeName} />
+          <AlertText>기관 투자를 받은 경우엔 기관명, 펀드 투자를 받은 경우엔 펀드명을 입력해주세요.</AlertText>
+          <Column>
+            <div>
+              <StockType>
+                주식 종류 <span style={{ color: '#FF8787' }}>*</span>
+              </StockType>
+              <StockTypeInput>
+                <Select
+                  value={stockType}
+                  onChange={handleChange}
+                  placeholder="주식 종류 선택"
+                  style={{ fontSize: '14px', color: '#333333' }}
+                  size="lg"
+                >
+                  <option value="보통주식">보통주식</option>
+                  <option value="상환전환우선주식 1종">상환전환우선주식 1종</option>
+                  <option value="상환전환우선주식 2종">상환전환우선주식 2종</option>
+                  <option value="상환전환우선주식 3종">상환전환우선주식 3종</option>
+                </Select>
+              </StockTypeInput>
+            </div>
+            <div>
+              <StockAmount>
+                주식 수량 <span style={{ color: '#FF8787' }}>*</span>
+              </StockAmount>
+              <StockAmountInput
+                name="stockAmount"
+                type="number"
+                min={1}
+                placeholder="수량 입력"
+                onChange={onChangeStockAmount}
+              ></StockAmountInput>
+            </div>
+          </Column>
+        </AddFormBox>
+        <SubmitButtonWrapper>
+          <Button type="submit">추가하기</Button>
+        </SubmitButtonWrapper>
+      </form>
     </>
   );
 };
