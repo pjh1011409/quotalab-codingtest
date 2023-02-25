@@ -4,11 +4,12 @@ import { faBuilding } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Select } from 'antd';
 import useGetCompany from 'src/hooks/useGetCompany';
+import { SkeletoncSelectUI } from '../LoadUI/Skeleton';
 
 export const CompanySelect = () => {
   const { company, isLoading } = useGetCompany();
 
-  if (isLoading) return <></>;
+  if (isLoading) return <SkeletoncSelectUI />;
   return (
     <>
       <BuildingLogo>
