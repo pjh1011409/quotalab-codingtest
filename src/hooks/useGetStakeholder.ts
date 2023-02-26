@@ -13,22 +13,22 @@ export interface Stakeholder {
   stockPrice: number;
   grantedAt: number;
 }
-async function getShareholderList() {
+const getStakeholderList = async () => {
   try {
     const response = await axios.get(`/stakeholders`);
     return response;
   } catch (err) {
     console.log('err', err);
   }
-}
+};
 
 const useGetStakeholder = () => {
-  const { data: shareholderlist, isLoading } = useQuery(QueryKeys.stakeholder, getShareholderList, {
-    staleTime: 0,
-    cacheTime: 1000,
+  const { data: stakeholderlist, isLoading } = useQuery(QueryKeys.stakeholder, getStakeholderList, {
+    staleTime: 300000, // 5분
+    cacheTime: 300000, // 5분
   });
 
-  return { shareholderlist, isLoading };
+  return { stakeholderlist, isLoading };
 };
 
 export default useGetStakeholder;
