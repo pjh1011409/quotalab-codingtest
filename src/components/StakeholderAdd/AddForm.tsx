@@ -6,7 +6,7 @@ import { useCustomToast } from 'src/hooks/useCustomToast';
 import { Select } from '@chakra-ui/react';
 
 const AddForm = () => {
-  const { onCreate } = useAddStakeholder();
+  const { createStakeholder } = useAddStakeholder();
   const [name, onChangeName] = useInput('');
   const [stockType, setStockType] = useState('');
   const [stockAmount, onChangeStockAmount] = useInput(0);
@@ -20,7 +20,7 @@ const AddForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isActive) {
-      onCreate({ name, stockType, stockAmount });
+      createStakeholder({ name, stockType, stockAmount });
     } else {
       toast({
         title: '모든 정보를 입력해주세요.',
