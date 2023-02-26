@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { QueryKeys } from 'src/queryClient';
 
 interface MutableStakeholder {
   name: string;
@@ -22,16 +23,18 @@ const addStakeholderFetch = async ({ name, stockType, stockAmount }: MutableStak
 
 const useAddStakeholder = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const { mutate: onCreate } = useMutation(
+  const { mutate: createStakeholder } = useMutation(
     ({ name, stockType, stockAmount }: MutableStakeholder) => addStakeholderFetch({ name, stockType, stockAmount }),
     {
       onSuccess: () => {
+        queryClient.invalidateQueries(QueryKeys.stakeholder);
         navigate('/');
       },
     }
   );
-  return { onCreate };
+  return { createStakeholder };
 };
 
 export default useAddStakeholder;
