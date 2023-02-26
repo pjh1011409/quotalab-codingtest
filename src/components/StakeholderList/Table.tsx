@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import useGetStakeholder, { Stakeholder, StockAmount } from 'src/hooks/useGetStakeholder';
@@ -6,18 +6,17 @@ import { SkeletonListUI } from '../LoadUI/Skeleton';
 import useGetCompany from 'src/hooks/useGetCompany';
 
 const Table = () => {
-  const { shareholderlist, isLoading } = useGetStakeholder();
+  const { stakeholderlist, isLoading } = useGetStakeholder();
   const { company } = useGetCompany();
-  const sumAmount: number[] = [];
 
-  const totalAmount = () => {
-    shareholderlist?.data.map((s: Stakeholder) => sumAmount.push(s.stockAmount));
-    return sumAmount.reduce((acc, curr) => acc + curr, 0);
-  };
+  const totalAmount = useMemo(
+    () => stakeholderlist?.data.reduce((acc: number, curr: { stockAmount: number }) => acc + curr.stockAmount, 0) || 0,
+    [stakeholderlist]
+  );
 
-  const commaMark = (num: number): string => {
+  const commaMark = React.useCallback((num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
+  }, []);
 
   if (isLoading) return <SkeletonListUI />;
 
@@ -33,18 +32,17 @@ const Table = () => {
             <td className="h5">취득일</td>
           </tr>
         </Theader>
-        {shareholderlist?.data
+        {stakeholderlist?.data
           .sort((a: StockAmount, b: StockAmount) => b.stockAmount - a.stockAmount)
           .map((s: Stakeholder) => {
+            const isMajorStakeholder = // 지분율 2% 이상 or 총가지 10억 이상
+              (s.stockAmount / company?.data.totalStockAmount) * 100 >= 2 || s.stockAmount * s.stockPrice >= 1000000000;
             return (
               <TBody key={s.name}>
                 <tr>
                   <td className="b1">
                     {s.name}
-                    {(s.stockAmount / company?.data.totalStockAmount) * 100 >= 2 || // 지분율 2% 이상
-                    s.stockAmount * s.stockPrice >= 1000000000 ? ( // 총가지 10억 이상
-                      <MajorStakeholder>👑 대주주</MajorStakeholder>
-                    ) : null}
+                    {isMajorStakeholder && <MajorStakeholder>👑 대주주</MajorStakeholder>}
                   </td>
                   <td className="b2">{s.stockType}</td>
                   <td className="b3">{commaMark(s.stockAmount)}</td>
@@ -59,7 +57,7 @@ const Table = () => {
             <td colSpan={2} className="f1">
               합계
             </td>
-            <td className="f2"> {commaMark(totalAmount())}</td>
+            <td className="f2"> {commaMark(totalAmount)}</td>
             <td colSpan={2} />
           </tr>
         </TFooter>
