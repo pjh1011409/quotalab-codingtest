@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { worker } from './_mocks/worker';
-import { QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { ChakraProvider } from '@chakra-ui/react';
-import { getClient } from './queryClient';
 
 if (process.env.NODE_ENV === 'development') {
   worker.start();
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-let queryClient = getClient();
+let queryClient = new QueryClient();
 
 root.render(
   <React.StrictMode>
@@ -21,6 +21,7 @@ root.render(
         <BrowserRouter>
           <App />
         </BrowserRouter>
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>
