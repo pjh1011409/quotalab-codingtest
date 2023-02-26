@@ -6,8 +6,9 @@ import { Select } from 'antd';
 import useGetCompany from 'src/hooks/useGetCompany';
 import { SkeletoncSelectUI } from '../LoadUI/Skeleton';
 
-export const CompanySelect = () => {
+const CompanySelect = () => {
   const { company, isLoading } = useGetCompany();
+  const companyName = company?.data.name;
 
   if (isLoading) return <SkeletoncSelectUI />;
   return (
@@ -17,12 +18,14 @@ export const CompanySelect = () => {
       </BuildingLogo>
       <Select
         style={{ margin: '0px 5px', width: '140px', textAlign: 'center' }}
-        defaultValue={`${company?.data.name}`}
-        options={[{ value: `1`, label: `${company?.data.name}` }]}
+        defaultValue={companyName}
+        options={[{ value: `1`, label: `${companyName}` }]}
       />
     </>
   );
 };
+
+export default CompanySelect;
 
 const BuildingLogo = styled.div`
   width: 24px;
