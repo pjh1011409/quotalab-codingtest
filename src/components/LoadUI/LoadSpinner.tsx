@@ -1,21 +1,18 @@
-import * as React from 'react';
-
-import { Space, Spin } from 'antd';
+import React from 'react';
+import { Spin } from 'antd';
+import styled from '@emotion/styled';
 
 export const LoadSpinner = () => {
   return (
-    <div
-      style={{
-        margin: '0 auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '530px',
-      }}
-    >
-      <Space size="middle">
-        <Spin size="large" />
-      </Space>
-    </div>
+    <SpinnerWrapper>
+      <Spin size="large" />
+    </SpinnerWrapper>
   );
 };
+
+const SpinnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 530px;
+`;
