@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export const Profile = () => {
+const Profile = () => {
   return (
     <UserWrapper>
       <FontAwesomeIcon icon={faUserCircle} color="gray" size="lg" />
@@ -11,6 +11,8 @@ export const Profile = () => {
     </UserWrapper>
   );
 };
+
+export default Profile;
 
 const UserWrapper = styled.div`
   margin-left: auto;

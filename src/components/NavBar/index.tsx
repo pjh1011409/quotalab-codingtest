@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { CompanySelect } from './CompanySelect';
-import { Profile } from './Profile';
-import { QuotaHeader } from './QuotaHeader';
+import CompanySelect from './CompanySelect';
+import Profile from './Profile';
+import QuotaHeader from './QuotaHeader';
 
-export const NavBar = () => {
+const NavBar = () => {
   return (
     <NavBarWrapper>
       <QuotaHeader />
@@ -14,6 +14,8 @@ export const NavBar = () => {
     </NavBarWrapper>
   );
 };
+
+export default NavBar;
 
 const NavBarWrapper = styled.div`
   display: flex;
