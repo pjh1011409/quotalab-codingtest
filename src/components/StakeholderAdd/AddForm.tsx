@@ -35,14 +35,14 @@ const AddForm = () => {
       <form onSubmit={handleSubmit}>
         <AddFormBox>
           <StakeholderName>
-            주주 이름 <span style={{ color: '#FF8787' }}>*</span>
+            주주 이름 <StarMark>*</StarMark>
           </StakeholderName>
           <StakeholderNameInput name="name" type="text" placeholder="이름 입력" onChange={onChangeName} />
           <AlertText>기관 투자를 받은 경우엔 기관명, 펀드 투자를 받은 경우엔 펀드명을 입력해주세요.</AlertText>
           <Column>
             <div>
               <StockType>
-                주식 종류 <span style={{ color: '#FF8787' }}>*</span>
+                주식 종류 <StarMark>*</StarMark>
               </StockType>
               <StockTypeInput>
                 <Select
@@ -61,7 +61,7 @@ const AddForm = () => {
             </div>
             <div>
               <StockAmount>
-                주식 수량 <span style={{ color: '#FF8787' }}>*</span>
+                주식 수량 <StarMark>*</StarMark>
               </StockAmount>
               <StockAmountInput
                 name="stockAmount"
@@ -90,6 +90,10 @@ const AddFormBox = styled.div`
   background-color: #ffffff;
   box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.03);
   border-radius: 8px;
+`;
+
+const StarMark = styled.span`
+  color: #ff8787;
 `;
 
 const StakeholderName = styled.div`
