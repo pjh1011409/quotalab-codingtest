@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
 import { Chart } from 'react-google-charts';
 import useGetStakeholder, { Stakeholder } from 'src/hooks/useGetStakeholder';
 import useGetCompany from 'src/hooks/useGetCompany';
 
 const DonutChart = () => {
-  const { shareholderlist } = useGetStakeholder();
+  const { stakeholderlist } = useGetStakeholder();
   const { company } = useGetCompany();
 
-  const data: (string | number)[][] = [['Task', 'Hours per Day']];
+  const data = useMemo(() => {
+    const chartData: (string | number)[][] = [['Task', 'Hours per Day']];
+
+    if (stakeholderlist?.data && company?.data) {
+      const totalStockAmount = company.data.totalStockAmount;
+
+      stakeholderlist?.data.map((s: Stakeholder) => {
+        chartData.push([s.name, (s.stockAmount / totalStockAmount) * 100]);
+      });
+    }
+    return chartData;
+  }, [stakeholderlist?.data, company?.data]);
 
   const options = { pieHole: 0.4, is3D: false };
-
-  shareholderlist?.data.map((s: Stakeholder) =>
-    data.push([s.name, (s.stockAmount / company?.data.totalStockAmount) * 100])
-  );
 
   return (
     <ChartWrapper>
@@ -26,7 +33,7 @@ const DonutChart = () => {
 export default DonutChart;
 
 export const ChartWrapper = styled.div`
-  width: full;
+  width: 100%;
   min-height: 298px;
   height: auto;
   margin-bottom: 12px;
@@ -39,6 +46,5 @@ export const ChartWrapper = styled.div`
     width: 90%;
     margin: 0 auto;
     margin-bottom: 12px;
-    overflow-y: scroll;
   }
 `;
