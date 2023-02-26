@@ -12,7 +12,10 @@ const getCompanyList = async () => {
 };
 
 const useGetCompany = () => {
-  const { data: company, isLoading } = useQuery(QueryKeys.company, getCompanyList, { staleTime: 0, cacheTime: 1000 });
+  const { data: company, isLoading } = useQuery(QueryKeys.company, getCompanyList, {
+    staleTime: 60000, // 1분
+    cacheTime: 60000, // 1분
+  });
 
   return { company, isLoading };
 };
